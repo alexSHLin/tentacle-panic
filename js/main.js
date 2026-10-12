@@ -43,6 +43,7 @@ const UI = {
     on('btn-result-map', () => this.goMap());
     on('btn-retry', () => this.startLevel(Game.index));
     on('btn-next', () => this.startLevel(Game.index + 1));
+    on('btn-ending-map', () => this.goMap());
     Game.pointer = this.pointer;
     Game.onEnd = r => this.showResult(r);
     Sound.setEnabled(Save.data.sound);
@@ -146,6 +147,7 @@ const UI = {
   showResult(r) {
     const { newBest, best } = Save.record(r.index, r);
     const cfg = LEVELS[r.index];
+    if (r.won && cfg.boss) { this.showEnding(); return; }   // 打倒章魚王 = 全部通關
     const title = $('result-title');
     title.textContent = r.won ? tr(cfg.boss ? 'victory' : 'clear') : tr(r.reason === 'sunk' ? 'failSunk' : 'failTime');
     title.className = r.won ? 'win' : 'lose';
@@ -155,6 +157,22 @@ const UI = {
     $('result-best').textContent = newBest && r.score > 0 ? tr('newBest') : `${tr('best')} ${best}`;
     $('btn-next').classList.toggle('hidden', !r.won || r.index >= LEVELS.length - 1);
     this.show('result');
+  },
+
+  showEnding() {
+    this.endStart = this.clock;
+    this.endCues = {};
+    this.show('ending');
+  },
+
+  // 通關畫面的音效時間點
+  endingCues(t) {
+    const cue = (name, at, fn) => {
+      if (t >= at && !this.endCues[name]) { this.endCues[name] = true; fn(); }
+    };
+    cue('schwing', 0.9, () => Sound.play('schwing'));
+    cue('boom', 1.5, () => Sound.play('boom'));
+    cue('music', 2.2, () => Sound.playMusic('ending'));
   },
 
   setText(id, text) {
@@ -195,6 +213,10 @@ const UI = {
     }
     if (this.screen === 'title' || this.screen === 'how') {
       drawTitle(ctx, this.clock, this.pointer);
+    } else if (this.screen === 'ending') {
+      const t = this.clock - this.endStart;
+      this.endingCues(t);
+      drawEnding(ctx, t);
     } else if (this.screen === 'map') {
       const [x, y] = MAP_SPOTS[this.selected], k = Math.min(1, dt * 4);
       this.ship.x += (x - 22 - this.ship.x) * k;
@@ -265,6 +287,9 @@ document.addEventListener('keydown', e => {
   } else if (s === 'how') {
     if (confirm || code === 'Escape') UI.show('title');
     else return;
+  } else if (s === 'ending') {
+    if (confirm || code === 'Escape') UI.goMap();
+    else return;
   } else if (s === 'result') {
     if (confirm) $('btn-next').classList.contains('hidden') ? UI.startLevel(Game.index) : UI.startLevel(Game.index + 1);
     else if (code === 'Escape') UI.goMap();
@@ -284,12 +309,15 @@ addEventListener('resize', resize);
 
 Save.load();
 Art.init();
+Ending.preloadFont();
 UI.init();
 resize();
 
-// 網址加上 ?level=5 可直接進入指定關卡（開發測試用）
-const startParam = Number(new URLSearchParams(location.search).get('level'));
-if (startParam >= 1 && startParam <= LEVELS.length) UI.startLevel(startParam - 1);
+// 網址加上 ?level=5 可直接進入指定關卡，?ending 直接看通關畫面（開發測試用）
+const params = new URLSearchParams(location.search);
+const startParam = Number(params.get('level'));
+if (params.has('ending')) UI.showEnding();
+else if (startParam >= 1 && startParam <= LEVELS.length) UI.startLevel(startParam - 1);
 else UI.goTitle();
 
 let last = performance.now();

@@ -37,6 +37,15 @@ const SHANTY_BASS =
   'C3:2 G2:2 C3:2 G2:2 D3:2 A2:2 D3:4 ';
 
 const SONGS = {
+  ending: {
+    bpm: 132,
+    drums: 'k...s...k.k.s...',
+    tracks: [
+      { type: 'square', vol: 0.05, notes: 'C5:2 E5:2 G5:4 E5:2 G5:2 C6:4 A5:2 G5:2 E5:2 C5:2 D5:4 G4:4 ' +
+                                          'C5:2 E5:2 G5:4 A5:2 G5:2 E5:4 F5:2 E5:2 D5:2 B4:2 C5:8' },
+      { type: 'triangle', vol: 0.16, notes: 'C3:4 G2:4 C3:4 E3:4 F2:4 C3:4 G2:4 G2:4 C3:4 G2:4 A2:4 E2:4 F2:4 G2:4 C3:8' },
+    ],
+  },
   calm: {
     bpm: 100,
     tracks: [
@@ -95,6 +104,10 @@ const SFX = {
   ink: (s, d) => { s.noise({ dur: 0.3, vol: 0.35, freq: 600, delay: d }); s.tone({ type: 'sine', freq: 240, to: 70, dur: 0.3, vol: 0.2, delay: d }); },
   boom: (s, d) => { s.noise({ dur: 0.35, vol: 0.3, freq: 700, delay: d }); s.tone({ freq: 120, to: 40, dur: 0.25, vol: 0.14, delay: d }); },
   thunder: (s, d) => s.noise({ dur: 1.4, vol: 0.45, freq: 260, delay: d }),
+  schwing: (s, d) => {
+    s.noise({ dur: 0.25, vol: 0.25, freq: 6000, filter: 'highpass', delay: d });
+    s.tone({ type: 'triangle', freq: 1800, to: 3200, dur: 0.3, vol: 0.12, delay: d });
+  },
   ui: (s, d) => s.tone({ freq: 880, dur: 0.05, vol: 0.08, delay: d }),
   deny: (s, d) => s.tone({ freq: 160, dur: 0.12, vol: 0.12, delay: d }),
   go: (s, d) => { s.tone({ freq: 523, dur: 0.1, vol: 0.12, delay: d }); s.tone({ freq: 784, dur: 0.18, vol: 0.12, delay: d + 0.1 }); },

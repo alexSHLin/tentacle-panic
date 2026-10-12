@@ -57,6 +57,7 @@ const TEXT = {
     bossName: '章魚王',
     rotate: '請將手機橫放以獲得最佳體驗',
     combo: '連擊',
+    allClear: '恭喜全部通關！',
   },
   en: {
     title: 'TENTACLE PANIC',
@@ -103,6 +104,7 @@ const TEXT = {
     bossName: 'KRAKEN',
     rotate: 'Rotate your phone to landscape',
     combo: 'COMBO',
+    allClear: 'ALL STAGES CLEAR!',
   },
 };
 

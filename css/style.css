@@ -302,6 +302,25 @@ button, .panel, .map-info { pointer-events: auto; }
   color: #ffb0a0;
 }
 
+/* ---------- 全部通關 ---------- */
+
+.ending-top {
+  position: absolute;
+  top: calc(var(--u) * 6);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: calc(var(--u) * 9);
+  color: var(--cream);
+  letter-spacing: var(--u);
+  animation: blink 1.2s steps(2) infinite;
+}
+.ending-bottom {
+  position: absolute;
+  right: calc(var(--u) * 5);
+  bottom: calc(var(--u) * 4);
+}
+
 #rotate-hint {
   display: none;
   position: fixed;
@@ -312,7 +331,26 @@ button, .panel, .map-info { pointer-events: auto; }
   font-size: 14px;
 }
 @media (orientation: portrait) and (max-width: 700px) {
-  #rotate-hint { display: block; }
+  /* ---------- 全部通關 ---------- */
+
+.ending-top {
+  position: absolute;
+  top: calc(var(--u) * 6);
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: calc(var(--u) * 9);
+  color: var(--cream);
+  letter-spacing: var(--u);
+  animation: blink 1.2s steps(2) infinite;
+}
+.ending-bottom {
+  position: absolute;
+  right: calc(var(--u) * 5);
+  bottom: calc(var(--u) * 4);
+}
+
+#rotate-hint { display: block; }
 }
 
 @keyframes banner {
